@@ -27,7 +27,7 @@ pipeline{
                 sh 'mvn test -DskipTests=true'
             }
         }
-		stage("Sonarqube Analysis"){
+	stage("Sonarqube Analysis"){
             steps{
                 withSonarQubeEnv('sonar-server') {
                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=EKART \
@@ -36,20 +36,20 @@ pipeline{
                 }
             }
         }
-		stage("Quality Gate"){
+	stage("Quality Gate"){
            steps {
                 script {
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
                 }
             } 
         }	
-		stage('OWASP DP SCAN') {
+	stage('OWASP DP SCAN') {
             steps {
                 dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'owasp-dp-check'
                  dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
              }
         }
-		stage('TRIVY FS SCAN') {
+	stage('TRIVY FS SCAN') {
             steps {
                 sh "trivy fs . > trivyfs.txt"
             }
@@ -76,7 +76,7 @@ pipeline{
                 }
             }
         }
-		stage('Trivy Scan') {
+	stage('Trivy Scan') {
             steps {
                  sh "trivy image sundarp1985/ekart:latest > trivy-report.txt "
                 
